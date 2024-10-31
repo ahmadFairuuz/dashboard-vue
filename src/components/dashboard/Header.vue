@@ -69,39 +69,26 @@ export default {
 <style scoped>
 header {
   background-color: #4b3f6b;
-
   padding: 10px 20px;
-
   display: flex;
-
   align-items: center;
-
   height: 60px;
-
   width: calc(100% - 180px);
-
   position: fixed;
-
   top: 0;
-
   left: 160px;
-
   z-index: 1000;
-
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
   transition: width 0.3s ease, left 0.3s ease;
 }
 
 header.expanded {
   width: 100%;
-
   left: 0;
 }
 
 .toggle-btn {
   background: none;
-
   border: none;
 
   color: white;

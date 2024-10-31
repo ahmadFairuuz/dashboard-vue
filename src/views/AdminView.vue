@@ -1,65 +1,74 @@
-<script setup>
-import ItemList from "@/components/admin/item/ItemList.vue";
-import ItemForm from "@/components/admin/item/ItemForm.vue";
-import UserList from "@/components/admin/user/UserList.vue";
-import TransactionList from "@/components/admin/transaction/TransactionList.vue";
-import Modal from "@/components/Modal.vue";
-import { ref } from "vue";
-
-const props = defineProps({
-  currentComponent: {
-    type: String,
-    required: true,
-  },
-});
-
-const showForm = ref(false);
-const selectedItem = ref(null);
-const isEdit = ref(false);
-
-const showEditForm = (item) => {
-  selectedItem.value = item;
-  isEdit.value = true;
-  showForm.value = true;
-};
-
-const showAddForm = () => {
-  selectedItem.value = null;
-  isEdit.value = false;
-  showForm.value = true;
-};
-
-const handleSubmit = (formData) => {
-  showForm.value = false;
-  selectedItem.value = null;
-  isEdit.value = false;
-};
-
-const cancelEditForm = () => {
-  showForm.value = false;
-  selectedItem.value = null;
-  isEdit.value = false;
-};
-</script>
-
 <template>
   <div class="admin-view">
     <div class="scrollable-content">
       <ItemList
-        v-if="props.currentComponent === 'item'"
+        v-if="currentComponent === 'items'"
         @edit-item="showEditForm"
         @add-item="showAddForm"
       />
-      <UserList v-if="props.currentComponent === 'user'" />
-      <TransactionList v-if="props.currentComponent === 'transaction'" />
+      <UserList v-if="currentComponent === 'users'" />
+      <TransactionList v-if="currentComponent === 'transactions'" />
     </div>
     <Modal
       v-if="showForm"
       :isVisible="showForm"
       @close="cancelEditForm"
-      :title="isEdit ? 'Edit Item' : 'Add Item'"
+      :title="isEdit ? 'Edit Barang' : 'Tambah Barang'"
     >
       <ItemForm :item="selectedItem" :isEdit="isEdit" @submit="handleSubmit" />
     </Modal>
   </div>
 </template>
+
+<script>
+import ItemList from "@/components/admin/item/ItemList.vue";
+import ItemForm from "@/components/admin/item/ItemForm.vue";
+import UserList from "@/components/admin/user/UserList.vue";
+import TransactionList from "@/components/admin/transaction/TransactionList.vue";
+import Modal from "@/components/Modal.vue";
+
+export default {
+  components: {
+    ItemList,
+    ItemForm,
+    Modal,
+    UserList,
+    TransactionList,
+  },
+  props: {
+    currentComponent: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      showForm: false,
+      selectedItem: null,
+      isEdit: false,
+    };
+  },
+  methods: {
+    showEditForm(item) {
+      this.selectedItem = item;
+      this.isEdit = true;
+      this.showForm = true;
+    },
+    showAddForm() {
+      this.selectedItem = null;
+      this.isEdit = false;
+      this.showForm = true;
+    },
+    handleSubmit(formData) {
+      this.showForm = false;
+      this.selectedItem = null;
+      this.isEdit = false;
+    },
+    cancelEditForm() {
+      this.showForm = false;
+      this.selectedItem = null;
+      this.isEdit = false;
+    },
+  },
+};
+</script>

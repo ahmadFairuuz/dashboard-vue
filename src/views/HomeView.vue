@@ -1,9 +1,9 @@
 <script setup>
-import List from "@/components/List.vue";
+import ItemList from '@/components/admin/item/ItemList.vue';
 </script>
 
 <template>
   <div>
-    <List />
+    <ItemList />
   </div>
 </template>
