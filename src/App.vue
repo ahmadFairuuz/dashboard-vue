@@ -15,19 +15,9 @@
       />
 
       <div class="main-content" :class="{ expanded: isSidebarVisible }">
-        <component
-          :is="currentView"
-          :currentComponent="currentComponent"
-          v-if="currentRole === 'admin'"
-          @add-item="handleAddItem"
-          @edit-item="handleEditItem"
-          @delete-item="handleDeleteItem"
-        />
-
-        <component
-          :is="currentView"
-          v-else
-          :currentComponent="currentComponent"
+        <router-view
+          :key="$route.fullPath"
+          :currentComponent="$route.params.component"
         />
       </div>
     </div>
@@ -37,32 +27,27 @@
 <script>
 import Header from "./components/dashboard/Header.vue";
 import Sidebar from "./components/dashboard/Sidebar.vue";
-import AdminView from "./views/AdminView.vue";
-import UserView from "./views/UserView.vue";
 import { EventBus } from "@/utils/EventBus";
-import contohKomponen from "./components/contohKomponen.vue";
 
 export default {
   name: "App",
   components: {
-    contohKomponen,
     Header,
     Sidebar,
-    AdminView,
-    UserView,
   },
   data() {
     const params = new URLSearchParams(window.location.search);
 
     return {
-      currentRole: params.get("role") || "admin",
-      currentComponent: params.get("component") || "items",
-      isSidebarVisible: params.get("sidebar") !== "hidden",
+      currentRole: this.$route.name || "admin",
+      isSidebarVisible: true,
+      searchTerm: "",
     };
   },
-  computed: {
-    currentView() {
-      return this.currentRole === "admin" ? AdminView : UserView;
+
+  watch: {
+    "$route.name"(newRole) {
+      this.currentRole = newRole;
     },
   },
 
@@ -73,25 +58,11 @@ export default {
     },
 
     navigateTo(component) {
-      this.currentComponent = component;
-      this.updateURLParams();
+      this.$router.push({ name: this.currentRole, params: { component } });
     },
-
     toggleSidebar() {
       this.isSidebarVisible = !this.isSidebarVisible;
-      this.updateURLParams();
-    },
 
-    updateURLParams() {
-      const params = new URLSearchParams();
-      params.set("role", this.currentRole);
-      params.set("component", this.currentComponent);
-      params.set("sidebar", this.isSidebarVisible ? "visible" : "hidden");
-      window.history.replaceState(
-        {},
-        "",
-        `${window.location.pathname}?${params}`
-      );
     },
 
     handleSearch(newQuery) {

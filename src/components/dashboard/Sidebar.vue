@@ -41,6 +41,15 @@
           <i class="bi bi-clock-history me-2"></i> History
         </a>
       </li>
+      <li class="nav-item">
+        <a
+          href="#"
+          @click.prevent="showComponent('about')"
+          class="nav-link text-white d-flex align-items-center"
+        >
+          <i class="bi bi-info-circle me-2"></i> About
+        </a>
+      </li>
     </ul>
   </div>
 </template>
@@ -73,29 +82,17 @@ export default {
 <style scoped>
 .sidebar {
   width: 200px;
-
-  background: #4b3f6b;
-
+  background: rgb(238, 157, 7);
   color: white;
-
   padding: 14px;
-
   height: 100vh;
-
   position: fixed;
-
   top: 0;
-
   left: 0;
-
   z-index: 999;
-
   font-size: 18px;
-
   font-family: sans-serif;
-
   transition: transform 0.3s ease-in-out;
-
   transform: translateX(-2);
 }
 
