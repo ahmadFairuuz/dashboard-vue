@@ -39,7 +39,7 @@ export default {
     const params = new URLSearchParams(window.location.search);
 
     return {
-      currentRole: this.$route.name || "admin",
+      currentRole: this.$router.name || "admin",
       isSidebarVisible: true,
       searchTerm: "",
     };
@@ -62,7 +62,6 @@ export default {
     },
     toggleSidebar() {
       this.isSidebarVisible = !this.isSidebarVisible;
-
     },
 
     handleSearch(newQuery) {

@@ -31,6 +31,7 @@
 import ItemCard from "@/components/admin/item/ItemCard.vue";
 import Modal from "@/components/Modal.vue";
 import ItemForm from "@/components/admin/item/ItemForm.vue";
+import { useItemStore } from "@/store/itemStore";
 
 export default {
   components: {
@@ -40,25 +41,24 @@ export default {
   },
   data() {
     return {
-      items: [
-        {
-          kode: "2024001",
-          nama: "Acer Nitro 15 AN515-58",
-          deskripsi: "Intel Core i5 12500H, RTX 3050, RAM 8GB DDR4, LAYAR 15.6",
-          stok: 80,
-        },
-
-        {
-          kode: "2024002",
-          nama: "Lenovo LOQ 15 15IRH8",
-          deskripsi: "Intel Core i5 13450H, RTX 3050, RAM 8GB DDR4, LAYAR 15.6",
-          stok: 80,
-        },
-      ],
       showForm: false,
       selectedItem: null,
       isEdit: false,
+      searchQuery: "",
     };
+  },
+  computed: {
+    items() {
+      return this.itemStore.items; //mengakses state "items" di pinia
+    },
+    filteredItems() {
+      return this.items.filter((item) => {
+        return (
+          item.kode.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          item.nama.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      });
+    },
   },
   methods: {
     showAddForm() {
@@ -74,6 +74,7 @@ export default {
     },
 
     handleSubmit(item) {
+      const itemStore = useItemStore();
       if (
         item.kode &&
         item.nama &&
@@ -82,11 +83,9 @@ export default {
         !isNaN(item.stok)
       ) {
         if (this.isEdit) {
-          const index = this.items.findIndex((i) => i.kode === item.kode);
-
-          this.items[index] = item;
+          itemStore.updateItem(item); // Memanggil action 'updateItem' dari store
         } else {
-          this.items.push(item);
+          itemStore.addItem(item); // Memanggil action 'addItem' dari store
         }
       }
       this.showForm = false;
@@ -97,7 +96,14 @@ export default {
     },
 
     deleteItem(kode) {
-      this.items = this.items.filter((item) => item.kode !== kode);
+      this.itemStore.deleteItem(kode);
+    },
+    handleSearch(query) {
+      this.searchQuery = query;
+    },
+    setup() {
+      const itemStore = useItemStore();
+      return { itemStore };
     },
   },
 };
