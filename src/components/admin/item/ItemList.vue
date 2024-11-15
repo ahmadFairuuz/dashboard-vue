@@ -28,9 +28,11 @@
 </template>
 
 <script>
+import { useItemStore } from "@/stores/itemStores";
 import ItemCard from "@/components/admin/item/ItemCard.vue";
 import Modal from "@/components/Modal.vue";
 import ItemForm from "@/components/admin/item/ItemForm.vue";
+import { EventBus } from "@/utils/EventBus";
 
 export default {
   components: {
@@ -40,25 +42,25 @@ export default {
   },
   data() {
     return {
-      items: [
-        {
-          kode: "2024001",
-          nama: "Acer Nitro 15 AN515-58",
-          deskripsi: "Intel Core i5 12500H, RTX 3050, RAM 8GB DDR4, LAYAR 15.6",
-          stok: 80,
-        },
-
-        {
-          kode: "2024002",
-          nama: "Lenovo LOQ 15 15IRH8",
-          deskripsi: "Intel Core i5 13450H, RTX 3050, RAM 8GB DDR4, LAYAR 15.6",
-          stok: 80,
-        },
-      ],
       showForm: false,
       selectedItem: null,
       isEdit: false,
+      searchQuery: "",
     };
+  },
+  computed: {
+    items() {
+      return this.itemStore.items; // Mengakses state 'items' dari store Pinia
+    },
+
+    filteredItems() {
+      return this.items.filter((item) => {
+        return (
+          item.kode.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          item.nama.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      });
+    },
   },
   methods: {
     showAddForm() {
@@ -82,11 +84,9 @@ export default {
         !isNaN(item.stok)
       ) {
         if (this.isEdit) {
-          const index = this.items.findIndex((i) => i.kode === item.kode);
-
-          this.items[index] = item;
+          this.itemStore.updateItem(item); // Memanggil action 'updateItem' dari store
         } else {
-          this.items.push(item);
+          this.itemStore.addItem(item); // Memanggil action 'addItem' dari store
         }
       }
       this.showForm = false;
@@ -97,8 +97,24 @@ export default {
     },
 
     deleteItem(kode) {
-      this.items = this.items.filter((item) => item.kode !== kode);
+      this.itemStore.deleteItem(kode); // Memanggil action 'deleteItem' dari store
     },
+    handleSearch(query) {
+      this.searchQuery = query;
+    },
+  },
+
+  mounted() {
+    EventBus.on("search", this.handleSearch);
+  },
+
+  beforeUnmount() {
+    EventBus.off("search", this.handleSearch);
+  },
+
+  setup() {
+    const itemStore = useItemStore();
+    return { itemStore };
   },
 };
 </script>
