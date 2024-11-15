@@ -32,11 +32,7 @@ import { useItemStore } from "@/stores/itemStores";
 import ItemCard from "@/components/admin/item/ItemCard.vue";
 import Modal from "@/components/Modal.vue";
 import ItemForm from "@/components/admin/item/ItemForm.vue";
-<<<<<<< HEAD
 import { EventBus } from "@/utils/EventBus";
-=======
-import { useItemStore } from "@/store/itemStore";
->>>>>>> 7b65d9129664d56230d0fc6e3225c1427ae11815
 
 export default {
   components: {
@@ -54,14 +50,9 @@ export default {
   },
   computed: {
     items() {
-<<<<<<< HEAD
       return this.itemStore.items; // Mengakses state 'items' dari store Pinia
     },
 
-=======
-      return this.itemStore.items; //mengakses state "items" di pinia
-    },
->>>>>>> 7b65d9129664d56230d0fc6e3225c1427ae11815
     filteredItems() {
       return this.items.filter((item) => {
         return (
@@ -94,15 +85,10 @@ export default {
         !isNaN(item.stok)
       ) {
         if (this.isEdit) {
-<<<<<<< HEAD
+
           this.itemStore.updateItem(item); // Memanggil action 'updateItem' dari store
         } else {
           this.itemStore.addItem(item); // Memanggil action 'addItem' dari store
-=======
-          itemStore.updateItem(item); // Memanggil action 'updateItem' dari store
-        } else {
-          itemStore.addItem(item); // Memanggil action 'addItem' dari store
->>>>>>> 7b65d9129664d56230d0fc6e3225c1427ae11815
         }
       }
       this.showForm = false;
@@ -113,18 +99,7 @@ export default {
     },
 
     deleteItem(kode) {
-<<<<<<< HEAD
-      this.itemStore.deleteItem(kode); // Memanggil action 'deleteItem' dari store
-=======
       this.itemStore.deleteItem(kode);
-    },
-    handleSearch(query) {
-      this.searchQuery = query;
-    },
-    setup() {
-      const itemStore = useItemStore();
-      return { itemStore };
->>>>>>> 7b65d9129664d56230d0fc6e3225c1427ae11815
     },
     handleSearch(query) {
       this.searchQuery = query;
