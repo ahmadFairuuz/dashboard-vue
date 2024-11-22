@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { useItemStore } from "@/stores/itemStores";
+import { useItemStore } from "@/store/itemStore";
 import ItemCard from "@/components/admin/item/ItemCard.vue";
 import Modal from "@/components/Modal.vue";
 import ItemForm from "@/components/admin/item/ItemForm.vue";
